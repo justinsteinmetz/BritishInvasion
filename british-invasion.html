@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>British Invasion — DSP Prague</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --off-black: #0e0e0e;
+  --surface: #131313;
+  --border: #1e1e1e;
+  --border-mid: #282828;
+  --text: #ece8e0;
+  --text-dim: rgba(236,232,224,0.55);
+  --text-muted: rgba(236,232,224,0.27);
+  --white: #f0ece4;
+  --gold: #c8a84b;
+  --gold-dim: rgba(200,168,75,0.1);
+  --gold-border: rgba(200,168,75,0.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+}
+
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ══════════════════════════════════════
+   SCREEN 0 — THE PHOTOGRAPH
+   Full bleed. No explanation.
+══════════════════════════════════════ */
+#s-photo {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--black);
+}
+
+.photo-full {
+  width: 100%;
+  flex: 1;
+  min-height: 70vh;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: grayscale(100%) contrast(1.1);
+}
+
+.photo-question {
+  padding: 36px 10vw 40px;
+  background: var(--black);
+  border-top: 1px solid var(--border);
+}
+
+.photo-q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 2.8vw, 34px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 28px;
+  max-width: 600px;
+}
+
+textarea.open-input {
+  width: 100%;
+  max-width: 640px;
+  min-height: 110px;
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  padding: 18px 20px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  display: block;
+  margin-bottom: 8px;
+}
+textarea.open-input:focus { border-color: var(--gold-border); }
+textarea.open-input::placeholder { color: var(--text-muted); }
+
+.input-note {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.nav-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-nav {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--text-dim);
+  padding: 13px 26px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-nav:hover { border-color: var(--gold-border); color: var(--text); }
+.btn-nav:disabled { opacity: 0.18; cursor: default; pointer-events: none; }
+.btn-nav.gold { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 500; }
+.btn-nav.gold:hover { opacity: 0.85; }
+.btn-nav.gold:disabled { background: var(--border); border-color: var(--border); color: var(--text-muted); opacity: 1; }
+
+/* ══════════════════════════════════════
+   SCREEN 1 — TITLE + LAST CHRISTMAS
+   The title arrives. The thread begins.
+══════════════════════════════════════ */
+#s-title {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 10vw 60px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Faint diagonal arrows — directionality */
+.title-hero::before {
+  content: '→ → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → → →';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  color: rgba(255,255,255,0.025);
+  line-height: 2.2;
+  word-break: break-all;
+  pointer-events: none;
+  padding: 20px;
+}
+
+.strand-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 48px;
+  position: relative;
+}
+
+h1.main-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(72px, 14vw, 180px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.88;
+  color: var(--text);
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.title-sub {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-dim);
+  max-width: 480px;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* Last Christmas section */
+.last-christmas {
+  padding: 48px 10vw 56px;
+  background: var(--off-black);
+}
+
+.lc-overline {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.lc-statement {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3vw, 38px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+.yt-embed {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16/9;
+  border: none;
+  display: block;
+  background: var(--black);
+  margin-bottom: 36px;
+}
+
+.lc-question {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 20px;
+  max-width: 520px;
+}
+
+.lc-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 480px;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════
+   SCREEN 2 — THE PATTERN
+   Three panels. Same mechanism. Three times.
+══════════════════════════════════════ */
+#s-pattern {
+  min-height: 100vh;
+}
+
+.pattern-head {
+  padding: 56px 10vw 36px;
+  border-bottom: 3px solid var(--gold);
+  background: var(--off-black);
+}
+
+.pattern-stage-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.pattern-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(42px, 7vw, 88px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 0.92;
+  margin-bottom: 16px;
+}
+
+.pattern-intro {
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* panels */
+.panel {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  border-bottom: 1px solid var(--border-mid);
+  min-height: 260px;
+}
+
+.panel:nth-child(odd) { background: var(--black); }
+.panel:nth-child(even) { background: var(--off-black); }
+
+.panel-left {
+  padding: 40px 24px 40px 10vw;
+  border-right: 1px solid var(--border-mid);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.panel-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.panel-artist {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(30px, 3.5vw, 46px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 0.95;
+  margin-bottom: 12px;
+}
+
+.panel-era {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.panel-right {
+  padding: 40px 10vw 40px 40px;
+}
+
+.panel-body {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+.panel-body strong { color: var(--text); font-weight: 600; }
+
+/* Sources list */
+.sources-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.sources-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.source-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-mid);
+  color: var(--text-dim);
+  padding: 6px 14px;
+}
+
+/* Pull quote */
+.panel-quote {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  border-left: 3px solid var(--gold);
+  padding-left: 18px;
+}
+
+.panel-nav {
+  padding: 32px 10vw;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-nav-b {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--text-dim);
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: all 0.14s;
+}
+.btn-nav-b:hover { border-color: var(--gold-border); color: var(--text); }
+.btn-nav-b.gold { background: var(--gold); border-color: var(--gold); color: var(--black); }
+.btn-nav-b.gold:hover { opacity: 0.85; }
+
+/* ══════════════════════════════════════
+   SCREEN 3 — THE CURRENTS
+   Away from artists. Into traditions.
+══════════════════════════════════════ */
+#s-currents {
+  min-height: 100vh;
+}
+
+.currents-head {
+  padding: 56px 10vw 36px;
+  border-bottom: 3px solid var(--gold);
+  background: var(--off-black);
+}
+
+.currents-stage-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.currents-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(42px, 7vw, 88px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 0.92;
+  margin-bottom: 16px;
+}
+
+.currents-intro {
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.currents-body {
+  padding: 0 10vw;
+}
+
+.current-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  border-bottom: 1px solid var(--border);
+  padding: 36px 0;
+  gap: 0;
+}
+
+.current-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.0;
+  padding-right: 24px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+.current-right {
+  padding-left: 36px;
+}
+
+.current-names {
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.current-note {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.current-arrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 10px;
+}
+
+.currents-closer {
+  padding: 40px 10vw 0;
+  border-top: 1px solid var(--border-mid);
+  margin-top: 0;
+}
+
+.currents-closer-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+/* ══════════════════════════════════════
+   SCREEN 4 — THE REVERSAL
+   The title changes meaning.
+══════════════════════════════════════ */
+#s-reversal {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.reversal-head {
+  padding: 56px 10vw 44px;
+  background: var(--off-black);
+  border-bottom: 3px solid var(--gold);
+}
+
+.reversal-stage-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.reversal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.reversal-body {
+  padding: 52px 10vw;
+  flex: 1;
+}
+
+/* The two-column story vs reveal */
+.reversal-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 52px;
+  border: 1px solid var(--border-mid);
+}
+
+.reversal-col {
+  padding: 40px 36px;
+}
+
+.reversal-col:first-child {
+  border-right: 1px solid var(--border-mid);
+  background: var(--surface);
+}
+
+.reversal-col:last-child {
+  background: var(--off-black);
+}
+
+.reversal-col-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.reversal-col-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(22px, 2.8vw, 34px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.05;
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+
+.reversal-col-body {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+.reversal-col-body strong { color: var(--text); font-weight: 500; }
+
+/* examples in reversal */
+.reversal-examples {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reversal-example {
+  border-left: 2px solid var(--border-mid);
+  padding-left: 14px;
+}
+
+.rev-ex-artist {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3px;
+}
+
+.rev-ex-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.reversal-tension {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 32px 36px;
+  max-width: 680px;
+}
+
+.reversal-tension-q {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 14px;
+  letter-spacing: -0.005em;
+}
+
+.reversal-tension-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+/* ══════════════════════════════════════
+   FINAL SCREEN
+══════════════════════════════════════ */
+/* ══ FINAL SCREEN ══ */
+#s-final {
+  min-height: 100vh;
+  display: block;
+  position: relative;
+}
+
+.final-photo-wrap {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.final-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(100%) contrast(1.05) brightness(0.35);
+  display: block;
+}
+
+/* Word overlay — traditions printed across the image */
+.final-overlay-words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0;
+  pointer-events: none;
+  padding: 40px;
+  overflow: hidden;
+}
+
+.final-overlay-words span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: rgba(200, 168, 75, 0.18);
+  line-height: 1.05;
+  padding: 2px 12px 2px 0;
+  white-space: nowrap;
+}
+
+.final-question-wrap {
+  position: relative;
+  z-index: 10;
+  padding: 48px;
+  max-width: 720px;
+  background: rgba(8,8,8,0.72);
+  backdrop-filter: blur(2px);
+}
+
+.final-question {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 36px;
+}
+
+.final-discuss {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.65;
+}
+
+/* ══════════════════════════════════════
+   MOBILE
+══════════════════════════════════════ */
+@media (max-width: 700px) {
+  .photo-question { padding: 36px 6vw 44px; }
+  .title-hero { padding: 60px 6vw 48px; }
+  .last-christmas { padding: 36px 6vw 44px; }
+  .pattern-head, .currents-head, .reversal-head { padding: 44px 6vw 28px; }
+  .panel { grid-template-columns: 1fr; }
+  .panel-left { border-right: none; padding: 28px 6vw 16px; border-bottom: 1px solid var(--border-mid); }
+  .panel-right { padding: 20px 6vw 32px; }
+  .panel-nav, .currents-body, .currents-closer, .reversal-body { padding-left: 6vw; padding-right: 6vw; }
+  .current-row { grid-template-columns: 1fr; gap: 12px; }
+  .current-label { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .current-right { padding-left: 0; }
+  .reversal-split { grid-template-columns: 1fr; }
+  .reversal-col:first-child { border-right: none; border-bottom: 1px solid var(--border-mid); }
+  #s-final { padding: 60px 6vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN 0: THE PHOTOGRAPH ══ -->
+<section id="s-photo" class="screen active">
+  <img src="/mnt/user-data/uploads/1780899501194.jpg" alt="Concert photograph" class="photo-full">
+  <div class="photo-question">
+    <p class="photo-q-text">What does this say to you about British music?</p>
+    <div class="nav-row">
+      <button class="btn-nav gold" onclick="goTo('s-title')">Continue →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SCREEN 1: TITLE + LAST CHRISTMAS ══ -->
+<section id="s-title" class="screen">
+  <div class="title-hero">
+    <div class="strand-label">DSP Prague · Themenfeld 3 · Politics, Culture, Society: UK</div>
+    <h1 class="main-title">British<br>Invasion</h1>
+    <p class="title-sub">An instrument about where British music comes from — and where it came from before that.</p>
+  </div>
+
+  <div class="last-christmas">
+    <div class="lc-overline">Stage 1 — The song you stopped hearing</div>
+    <p class="lc-statement">You know this song.</p>
+    <iframe class="yt-embed"
+      src="https://www.youtube.com/embed/E8gmARGvPlI?rel=0&modestbranding=1"
+      allowfullscreen loading="lazy"
+      title="Wham! — Last Christmas"></iframe>
+    <p class="lc-question">Where did it come from?</p>
+    <p class="lc-note">Not geographically. Musically. What does this song sound like it was built from?</p>
+    <textarea class="open-input" id="lc-response"
+      placeholder="Describe the sound. Name influences if you can. Guess if you can't."
+      oninput="checkLC()" style="max-width:560px;"></textarea>
+    <p class="input-note" style="margin-bottom:28px;">Your answer is saved.</p>
+    <div class="nav-row">
+      <button class="btn-nav gold" id="btn-lc-next" onclick="goTo('s-pattern')" disabled>Pull the thread →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SCREEN 2: THE PATTERN ══ -->
+<section id="s-pattern" class="screen">
+  <div class="pattern-head">
+    <div class="pattern-stage-num">Stage 2 — The pattern</div>
+    <div class="pattern-title">Three acts.<br>Same mechanism.</div>
+    <p class="pattern-intro">Wham! is not a coincidence. Here is what it belongs to.</p>
+  </div>
+
+  <!-- Panel 1: Wham! -->
+  <div class="panel">
+    <div class="panel-left">
+      <div class="panel-num">01</div>
+      <div class="panel-artist">Wham!</div>
+      <div class="panel-era">1982 — 1986</div>
+    </div>
+    <div class="panel-right">
+      <p class="panel-body">
+        George Michael grew up listening to American soul and funk. The production on <em>Last Christmas</em>, <em>Wake Me Up Before You Go-Go</em>, <em>Careless Whisper</em> — the synth bass lines, the drum machine patterns, the vocal phrasing — all of it is in direct conversation with <strong>Motown</strong>, <strong>Philadelphia soul</strong>, and <strong>American R&B</strong>. The sources are specific, audible, and largely uncredited in the way Wham! was marketed and remembered.
+      </p>
+      <div class="sources-label">Direct influences</div>
+      <div class="sources-list">
+        <span class="source-tag">Marvin Gaye</span>
+        <span class="source-tag">Stevie Wonder</span>
+        <span class="source-tag">Smokey Robinson</span>
+        <span class="source-tag">The Isley Brothers</span>
+        <span class="source-tag">Philadelphia Soul</span>
+        <span class="source-tag">Motown</span>
+      </div>
+      <p class="panel-quote">"I was obsessed with Motown from the age of seven. That's where everything came from."<br><span style="font-size:0.55em; font-weight:400; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase;">— George Michael</span></p>
+    </div>
+  </div>
+
+  <!-- Panel 2: The Beatles -->
+  <div class="panel">
+    <div class="panel-left">
+      <div class="panel-num">02</div>
+      <div class="panel-artist">The Beatles</div>
+      <div class="panel-era">1960 — 1970</div>
+    </div>
+    <div class="panel-right">
+      <p class="panel-body">
+        The Beatles began as a covers band playing American rock and roll and R&B in Liverpool clubs. <strong>Chuck Berry, Little Richard, the Everly Brothers, Smokey Robinson</strong> — these were the records John Lennon and Paul McCartney learned from. Their early catalogue is saturated in Black American musical tradition. When they crossed the Atlantic in 1964 and were called a British invasion, they were bringing a translated version of American music back to America. The translation was celebrated. The sources were largely not.
+      </p>
+      <div class="sources-label">Direct influences</div>
+      <div class="sources-list">
+        <span class="source-tag">Chuck Berry</span>
+        <span class="source-tag">Little Richard</span>
+        <span class="source-tag">Smokey Robinson</span>
+        <span class="source-tag">The Everly Brothers</span>
+        <span class="source-tag">Muddy Waters</span>
+        <span class="source-tag">American R&B</span>
+      </div>
+      <p class="panel-quote">"We were just copying American music and presenting it back to them."<br><span style="font-size:0.55em; font-weight:400; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase;">— John Lennon</span></p>
+    </div>
+  </div>
+
+  <!-- Panel 3: Adele -->
+  <div class="panel">
+    <div class="panel-left">
+      <div class="panel-num">03</div>
+      <div class="panel-artist">Adele</div>
+      <div class="panel-era">2008 — present</div>
+    </div>
+    <div class="panel-right">
+      <p class="panel-body">
+        Adele's vocal style draws directly from <strong>Etta James, Aretha Franklin</strong>, and the gospel tradition — the same South London soul lineage that produced Amy Winehouse. The music industry took that voice and sold it globally as quintessentially British.
+      </p>
+      <div class="sources-label">Direct influences</div>
+      <div class="sources-list">
+        <span class="source-tag">Etta James</span>
+        <span class="source-tag">Aretha Franklin</span>
+        <span class="source-tag">Gospel tradition</span>
+        <span class="source-tag">Destiny's Child</span>
+        <span class="source-tag">South London soul</span>
+      </div>
+      <p class="panel-quote">"Etta James was everything to me. That's the voice I was always trying to find."<br><span style="font-size:0.55em; font-weight:400; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase;">— Adele</span></p>
+    </div>
+  </div>
+
+  <div class="panel-nav">
+    <button class="btn-nav-b" onclick="goTo('s-title')">← Back</button>
+    <button class="btn-nav-b gold" onclick="goTo('s-currents')">Pull back further →</button>
+  </div>
+</section>
+
+
+<!-- ══ SCREEN 3: THE CURRENTS ══ -->
+<section id="s-currents" class="screen">
+  <div class="currents-head">
+    <div class="currents-stage-num">Stage 3 — The currents</div>
+    <div class="currents-title">Not artists.<br>Traditions.</div>
+    <p class="currents-intro">Behind the artists are rivers. The same rivers, running through all of them.</p>
+  </div>
+
+  <div class="currents-body">
+    <div class="current-row">
+      <div class="current-label">Blues</div>
+      <div class="current-right">
+        <div class="current-names">Robert Johnson · Muddy Waters · Howlin' Wolf · BB King</div>
+        <div class="current-note">Developed in the American South by Black communities under segregation. Travelled north to Chicago. Crossed the Atlantic to British musicians in the 1950s and 60s — the Rolling Stones, the Yardbirds, Cream, Led Zeppelin. Became the foundation of what the world calls classic British rock.</div>
+        <div class="current-arrow">→ The Beatles → The Stones → British rock</div>
+      </div>
+    </div>
+
+    <div class="current-row">
+      <div class="current-label">Gospel</div>
+      <div class="current-right">
+        <div class="current-names">Mahalia Jackson · Sam Cooke · Aretha Franklin · Al Green</div>
+        <div class="current-note">The sacred music of Black American churches, rooted in the spiritual traditions of enslaved communities. Became the emotional architecture of soul music. Crossed to Britain through records and migration. Runs directly through Adele, Amy Winehouse, and the South London soul tradition.</div>
+        <div class="current-arrow">→ Adele → Amy Winehouse → South London soul</div>
+      </div>
+    </div>
+
+    <div class="current-row">
+      <div class="current-label">Soul &amp; Funk</div>
+      <div class="current-names" style="padding-left:36px; padding-top:36px;">Marvin Gaye · James Brown · Stevie Wonder · Sly Stone · Parliament</div>
+      <div style="padding-left:36px; padding-bottom:36px;">
+        <div class="current-note" style="margin-top:8px;">The commercial and artistic peak of Black American popular music in the 1960s and 70s. The production language — the drum patterns, the bass lines, the chord voicings — became the grammar of British pop. George Michael absorbed it entirely. So did every British producer who worked in the 1980s.</div>
+        <div class="current-arrow">→ Wham! → British 80s pop → George Michael</div>
+      </div>
+    </div>
+
+    <div class="current-row">
+      <div class="current-label">Reggae &amp; Sound System</div>
+      <div class="current-right">
+        <div class="current-names">Bob Marley · Lee Perry · Studio One · Jamaican sound systems</div>
+        <div class="current-note">Arrived in Britain with Caribbean communities from the 1950s onward. Sound system culture — the practice of playing records for communities in outdoor and indoor spaces — became the direct ancestor of rave culture, jungle, drum and bass, UK garage, and grime. The Clash absorbed it. So did Massive Attack. So did every British dance music movement since.</div>
+        <div class="current-note" style="margin-top:10px; color:var(--gold); opacity:0.85;">The photograph at the beginning of this instrument was of The Clash — one of Britain's most iconic punk bands. They were also deeply shaped by reggae and Jamaican sound system culture. The image was already carrying the argument.</div>
+        <div class="current-arrow">→ Punk → Rave → Jungle → Grime → UK jazz</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="currents-closer">
+    <p class="currents-closer-text">These are not influences in the sense of mild inspiration. They are the structural foundations of what Britain calls its own music.</p>
+    <div class="nav-row" style="justify-content:flex-end; padding-bottom:48px;">
+      <button class="btn-nav-b" onclick="goTo('s-pattern')">← Back</button>
+      <button class="btn-nav-b gold" onclick="goTo('s-reversal')">The reversal →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SCREEN 4: THE REVERSAL ══ -->
+<section id="s-reversal" class="screen">
+  <div class="reversal-head">
+    <div class="reversal-stage-num">Stage 4 — The reversal</div>
+    <h2 class="reversal-title">The title changes meaning.</h2>
+  </div>
+
+  <div class="reversal-body">
+    <div class="reversal-split">
+      <div class="reversal-col">
+        <div class="reversal-col-label">The canonical story</div>
+        <div class="reversal-col-title">Britain invaded America</div>
+        <p class="reversal-col-body">
+          In 1964, The Beatles landed in New York. Ed Sullivan. Screaming crowds. Within months, British acts dominated the American charts. The Rolling Stones, The Kinks, The Who followed. The world called it the <strong>British Invasion</strong> — Britain exporting its culture, its sound, its identity to the most powerful music market on earth.
+        </p>
+        <p class="reversal-col-body" style="margin-top:14px;">
+          It was celebrated as proof of British creative genius. A national triumph. The moment Britain showed the world what it was made of.
+        </p>
+      </div>
+      <div class="reversal-col">
+        <div class="reversal-col-label">What the instrument reveals</div>
+        <div class="reversal-col-title">The invasion ran both ways</div>
+        <p class="reversal-col-body">
+          Britain exported music that had already crossed the Atlantic in the opposite direction. Blues, gospel, soul, R&B — developed by Black American communities — had travelled to Britain through records and radio. British musicians absorbed those traditions, translated them through white working-class voices, and sent them back.
+        </p>
+        <div class="reversal-examples">
+          <div class="reversal-example">
+            <div class="rev-ex-artist">The Beatles</div>
+            <div class="rev-ex-text">Returned Chuck Berry and Little Richard to America in a British accent.</div>
+          </div>
+          <div class="reversal-example">
+            <div class="rev-ex-artist">The Rolling Stones</div>
+            <div class="rev-ex-text">Introduced many white Americans to Muddy Waters — who they named themselves after.</div>
+          </div>
+          <div class="reversal-example">
+            <div class="rev-ex-artist">Wham!</div>
+            <div class="rev-ex-text">Sold Motown's emotional architecture to a generation that didn't know where it came from.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reversal-tension">
+      <p class="reversal-tension-q">The translation was celebrated. The source was not.</p>
+      <p class="reversal-tension-note">This is a question about what gets credited, what gets remembered, and who gets written into the national story.</p>
+    </div>
+
+    <div class="nav-row" style="margin-top:36px; padding-top:28px; border-top:1px solid var(--border);">
+      <button class="btn-nav" onclick="goTo('s-currents')">← Back</button>
+      <button class="btn-nav gold" onclick="goTo('s-final')">Final question →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FINAL SCREEN ══ -->
+<section id="s-final" class="screen">
+  <div class="final-photo-wrap">
+    <img src="/mnt/user-data/uploads/1780899501194.jpg" alt="" class="final-photo" aria-hidden="true">
+    <div class="final-overlay-words" aria-hidden="true">
+      <span>Blues</span>
+      <span>Gospel</span>
+      <span>Soul</span>
+      <span>Reggae</span>
+      <span>Sound System</span>
+      <span>Migration</span>
+      <span>Funk</span>
+      <span>R&amp;B</span>
+      <span>Dub</span>
+      <span>Ska</span>
+      <span>Motown</span>
+      <span>Rocksteady</span>
+      <span>Exchange</span>
+      <span>Blues</span>
+      <span>Gospel</span>
+      <span>Soul</span>
+      <span>Reggae</span>
+      <span>Migration</span>
+      <span>Funk</span>
+      <span>Sound System</span>
+    </div>
+    <div class="final-question-wrap">
+      <p class="final-question">If British music is built from traditions that travelled from elsewhere — what makes it British?</p>
+      <p class="final-discuss">Discuss.</p>
+    </div>
+  </div>
+</section>
+
+
+<script>
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+
+function checkLC() {
+  const val = document.getElementById('lc-response').value.trim();
+  document.getElementById('btn-lc-next').disabled = val.length < 10;
+}
+</script>
+</body>
+</html>
